@@ -295,4 +295,71 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "en": "Removed {count} duplicate leads.",
         "ar": "تم حذف {count} عميل مكرر.",
     },
+
+    # -- Visual overhaul: Hero & Home --
+    "hero_tagline": {
+        "en": "Collect professional contact info from multiple sources to generate real estate sales leads.",
+        "ar": "اجمع معلومات التواصل المهنية من مصادر متعددة لتوليد عملاء محتملين لمبيعات العقارات.",
+    },
+    "feature_scrape_title": {"en": "Scrape", "ar": "جمع البيانات"},
+    "feature_scrape_desc": {
+        "en": "Pull leads from Google Places, Yellow Pages, or any URL automatically.",
+        "ar": "اجمع العملاء من Google Places وYellow Pages أو أي رابط تلقائيًا.",
+    },
+    "feature_manage_title": {"en": "Manage", "ar": "إدارة"},
+    "feature_manage_desc": {
+        "en": "Filter, search, and update lead statuses through the pipeline.",
+        "ar": "فلتر وابحث وحدّث حالات العملاء عبر خط الأنابيب.",
+    },
+    "feature_export_title": {"en": "Export", "ar": "تصدير"},
+    "feature_export_desc": {
+        "en": "Download your data as CSV or Excel in one click.",
+        "ar": "حمّل بياناتك كـ CSV أو Excel بنقرة واحدة.",
+    },
+    "go_to_scraper": {"en": "Start Scraping", "ar": "ابدأ الجمع"},
+    "go_to_dashboard": {"en": "View Dashboard", "ar": "عرض لوحة التحكم"},
+
+    # -- Visual overhaul: Dashboard --
+    "lead_completeness": {"en": "Lead Completeness", "ar": "اكتمال البيانات"},
+    "with_phone": {"en": "With Phone", "ar": "مع هاتف"},
+    "with_email": {"en": "With Email", "ar": "مع بريد"},
+    "with_website": {"en": "With Website", "ar": "مع موقع"},
+
+    # -- Visual overhaul: Scraper --
+    "source_google_desc": {
+        "en": "Search the Google Places API for local businesses.",
+        "ar": "ابحث في Google Places API عن الأنشطة التجارية المحلية.",
+    },
+    "source_yp_desc": {
+        "en": "Scrape business listings from YellowPages.com.",
+        "ar": "اجمع بيانات الأنشطة التجارية من YellowPages.com.",
+    },
+    "source_url_desc": {
+        "en": "Extract contacts from any web page via URL.",
+        "ar": "استخرج جهات الاتصال من أي صفحة ويب عبر الرابط.",
+    },
+    "results_summary": {"en": "Results Summary", "ar": "ملخص النتائج"},
+    "new_leads": {"en": "New Leads", "ar": "عملاء جدد"},
+    "duplicates": {"en": "Duplicates", "ar": "مكرر"},
+
+    # -- Visual overhaul: Export --
+    "csv_desc": {
+        "en": "Comma-separated values, works everywhere.",
+        "ar": "قيم مفصولة بفواصل، يعمل في كل مكان.",
+    },
+    "excel_desc": {
+        "en": "Microsoft Excel spreadsheet format.",
+        "ar": "تنسيق جداول بيانات Microsoft Excel.",
+    },
+    "export_summary": {"en": "Export Summary", "ar": "ملخص التصدير"},
+    "total_available": {"en": "Total Available", "ar": "الإجمالي المتاح"},
+    "filtered_count": {"en": "Filtered Count", "ar": "العدد المفلتر"},
+
+    # -- Visual overhaul: Settings --
+    "api_status": {"en": "API Status", "ar": "حالة API"},
+    "configured": {"en": "Configured", "ar": "مكوّن"},
+    "not_configured": {"en": "Not Configured", "ar": "غير مكوّن"},
+
+    # -- Visual overhaul: Leads --
+    "pipeline_overview": {"en": "Pipeline Overview", "ar": "نظرة عامة على خط الأنابيب"},
 }

@@ -1,18 +1,35 @@
 import streamlit as st
 import pandas as pd
 from db.database import init_db
-from db.queries import get_leads, get_categories, update_lead_status, update_lead_notes, delete_leads
+from db.queries import get_leads, get_categories, get_leads_by_status_stats, update_lead_status, update_lead_notes, delete_leads
 from i18n import (
     t, inject_rtl_css, STATUS_VALUES, translated_statuses,
-    status_display_to_db, translate_columns,
+    status_display_to_db, status_db_to_display, translate_columns,
 )
+from styles import inject_custom_css, section_header, status_badge, mini_status_bar
 
 init_db()
 inject_rtl_css()
+inject_custom_css()
 
-st.header(t("leads"))
+st.markdown(section_header(t("leads"), "👥"), unsafe_allow_html=True)
 
 display_statuses = translated_statuses()
+
+# --- Pipeline mini-bar ---
+status_data = get_leads_by_status_stats()
+if status_data:
+    status_counts = {row["status"]: row["count"] for row in status_data}
+    total_pipeline = sum(status_counts.values())
+    st.markdown(f"**{t('pipeline_overview')}**")
+    st.markdown(mini_status_bar(status_counts, total_pipeline), unsafe_allow_html=True)
+    # Legend
+    legend_html = " ".join(
+        f'{status_badge(status_db_to_display(s))} <span style="font-size:0.82rem;color:#64748b;">{c}</span>&nbsp;&nbsp;'
+        for s, c in status_counts.items() if c > 0
+    )
+    st.markdown(legend_html, unsafe_allow_html=True)
+    st.markdown("")
 
 # --- Filters ---
 col1, col2, col3, col4 = st.columns(4)
@@ -62,13 +79,16 @@ with st.expander(t("bulk_actions")):
             st.success(t("deleted_leads", count=len(selected_ids)))
             st.rerun()
 
-# --- Data table ---
-df_display = translate_columns(df[display_cols], display_cols)
+# --- Data table with status badges ---
+df_display = df[display_cols].copy()
+# Translate status for display
+df_display["status"] = df_display["status"].apply(status_db_to_display)
+df_display = translate_columns(df_display, display_cols)
 st.dataframe(df_display, use_container_width=True, hide_index=True)
 
 # --- Inline editor ---
-st.divider()
-st.subheader(t("edit_lead"))
+st.markdown("")
+st.markdown(section_header(t("edit_lead"), "✏️"), unsafe_allow_html=True)
 lead_id = st.number_input(t("lead_id_to_edit"), min_value=1, step=1)
 
 matching = [l for l in leads if l["id"] == lead_id]

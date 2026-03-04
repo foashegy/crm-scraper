@@ -9,16 +9,32 @@ from scrapers.google_places import GooglePlacesScraper
 from scrapers.yellow_pages import YellowPagesScraper
 from scrapers.custom_url import CustomURLScraper
 from i18n import t, inject_rtl_css
+from styles import inject_custom_css, section_header, metric_card
 
 load_dotenv()
 init_db()
 inject_rtl_css()
+inject_custom_css()
 
-st.header(t("scraper"))
+st.markdown(section_header(t("scraper"), "🔍"), unsafe_allow_html=True)
 
 # --- Source selector ---
 source_options = ["Google Places", "Yellow Pages", "Custom URL"]
 source = st.selectbox(t("data_source"), source_options)
+
+# Source description card
+SOURCE_INFO = {
+    "Google Places": ("🗺️", t("source_google_desc")),
+    "Yellow Pages": ("📒", t("source_yp_desc")),
+    "Custom URL": ("🔗", t("source_url_desc")),
+}
+icon, desc = SOURCE_INFO[source]
+st.markdown(f"""
+<div class="source-info">
+    <span class="si-icon">{icon}</span>
+    <span class="si-text">{desc}</span>
+</div>
+""", unsafe_allow_html=True)
 
 # --- Category & location ---
 categories = get_categories()
@@ -93,7 +109,17 @@ if st.button(t("run_scrape"), type="primary"):
                 st.session_state["scraped_leads"] = leads
                 st.session_state["scrape_job_id"] = job_id
                 progress.progress(100, text=t("done"))
-                st.success(t("found_results", count=len(leads)))
+
+                # Results summary card
+                st.markdown(section_header(t("results_summary"), "📊"), unsafe_allow_html=True)
+                rc1, rc2, rc3 = st.columns(3)
+                with rc1:
+                    st.markdown(metric_card("📥", t("found_results", count=len(leads)), len(leads), "#3b82f6"), unsafe_allow_html=True)
+                with rc2:
+                    st.markdown(metric_card("🆕", t("new_leads"), "—", "#22c55e"), unsafe_allow_html=True)
+                with rc3:
+                    st.markdown(metric_card("🔄", t("duplicates"), "—", "#f59e0b"), unsafe_allow_html=True)
+
                 st.dataframe(pd.DataFrame(preview_data), use_container_width=True, hide_index=True)
             else:
                 progress.progress(100, text=t("done"))

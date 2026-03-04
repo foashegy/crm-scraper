@@ -7,30 +7,48 @@ from db.queries import (
     get_setting, set_setting, purge_duplicates,
 )
 from i18n import t, inject_rtl_css
+from styles import inject_custom_css, section_header
 
 load_dotenv()
 init_db()
 inject_rtl_css()
+inject_custom_css()
 
-st.header(t("settings"))
+st.markdown(section_header(t("settings"), "⚙️"), unsafe_allow_html=True)
 
 # --- API Key Status ---
-st.subheader(t("api_keys"))
+st.markdown(section_header(t("api_keys"), "🔑"), unsafe_allow_html=True)
 api_key = os.getenv("GOOGLE_PLACES_API_KEY", "")
 if api_key and api_key != "your_api_key_here":
-    st.success(t("api_key_configured", key=api_key[:8]))
+    st.markdown(f"""
+    <div class="settings-status-card" style="--indicator:#22c55e;">
+        <span class="ssc-icon">✅</span>
+        <span class="ssc-text"><strong>Google Places API</strong> — {t("configured")} ({api_key[:8]}...)</span>
+    </div>
+    """, unsafe_allow_html=True)
 else:
-    st.warning(t("api_key_not_set"))
+    st.markdown(f"""
+    <div class="settings-status-card" style="--indicator:#ef4444;">
+        <span class="ssc-icon">❌</span>
+        <span class="ssc-text"><strong>Google Places API</strong> — {t("not_configured")}</span>
+    </div>
+    """, unsafe_allow_html=True)
     st.code("GOOGLE_PLACES_API_KEY=your_key_here", language="text")
 
-st.divider()
+st.markdown("")
 
 # --- Category Management ---
-st.subheader(t("categories"))
+st.markdown(section_header(t("categories"), "📁"), unsafe_allow_html=True)
 
 categories = get_categories()
 for cat in categories:
     with st.expander(f"{t('custom_prefix') if cat.is_custom else ''}{cat.name}"):
+        # Show keywords as tags
+        if cat.keywords:
+            tags_html = " ".join(f'<span class="kw-tag">{kw}</span>' for kw in cat.keywords)
+            st.markdown(tags_html, unsafe_allow_html=True)
+            st.markdown("")
+
         new_name = st.text_input(t("name"), value=cat.name, key=f"cat_name_{cat.id}")
         new_kw = st.text_area(
             t("keywords_per_line"),
@@ -51,8 +69,8 @@ for cat in categories:
                     st.success(t("deleted"))
                     st.rerun()
 
-st.divider()
-st.subheader(t("add_custom_category"))
+st.markdown("")
+st.markdown(section_header(t("add_custom_category"), "➕"), unsafe_allow_html=True)
 with st.form("add_category"):
     new_cat_name = st.text_input(t("category_name"))
     new_cat_keywords = st.text_area(t("keywords_per_line"))
@@ -68,10 +86,10 @@ with st.form("add_category"):
         else:
             st.error(t("enter_category_name"))
 
-st.divider()
+st.markdown("")
 
 # --- Maintenance ---
-st.subheader(t("maintenance"))
+st.markdown(section_header(t("maintenance"), "🔧"), unsafe_allow_html=True)
 if st.button(t("purge_duplicates")):
     removed = purge_duplicates()
     st.success(t("removed_duplicates", count=removed))
